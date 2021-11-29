@@ -1,0 +1,14 @@
+﻿@page "/databinding"
+
+<h1>@nome</h1>
+
+<hr />
+
+<input @bind="nome" /> @*evento onchange - só atualiza quando perde o foco*@
+<hr />
+
+<input @bind-value="nome" @bind-value:event="oninput" /> @*evento oninput - atualiza a cada caractere digitado*@
+
+@code{
+    string nome { get; set; } = "Blazor";
+}
