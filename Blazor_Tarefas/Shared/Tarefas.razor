@@ -22,6 +22,11 @@
     </tbody>
 </table>
 
+<Confirma @ref="confirmacao" onCancela="CancelaConfirmacao" 
+          onConfirma="RemoverTarefaConfirmacao">
+    <div>Deseja excluir esta tarefa?</div>
+</Confirma>
+
 
 @if (tarefas != null)
 {
@@ -40,6 +45,30 @@
 
     private string novaTarefa = "";
 
+    //instancia do componente Confirma
+    Confirma confirmacao;
+
+    Tarefa tarefaRemover;
+
+    private void RemoveTarefa(Tarefa tarefa)
+    {
+        confirmacao.Exibir();
+        tarefaRemover = tarefa;
+    }
+
+    void RemoverTarefaConfirmacao()
+    {
+        tarefas.Remove(tarefaRemover);
+        tarefaRemover = null;
+        confirmacao.Ocultar();
+    }
+
+    void CancelaConfirmacao()
+    {
+        confirmacao.Ocultar();
+        tarefaRemover = null;
+    }
+
     void AdicionarNovaTarefa()
     {
         if (!string.IsNullOrWhiteSpace(novaTarefa))
@@ -52,10 +81,5 @@
             });
             novaTarefa = "";
         }
-    }
-
-    private void RemoveTarefa(Tarefa tarefa)
-    {
-        tarefas.Remove(tarefas.First(x => x.ID == tarefa.ID));
     }
 }
