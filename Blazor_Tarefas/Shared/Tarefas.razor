@@ -1,4 +1,6 @@
-﻿<h1>@Titulo</h1>
+﻿@inject IJSRuntime js
+
+<h1>@Titulo</h1>
 
 
 <table class="table">
@@ -50,11 +52,40 @@
 
     Tarefa tarefaRemover;
 
-    private void RemoveTarefa(Tarefa tarefa)
+    //chamada da janela de diálogo do bootstrap
+    //private void RemoveTarefa(Tarefa tarefa)
+    //{
+    //    confirmacao.Exibir();
+    //    tarefaRemover = tarefa;
+    //}
+
+    //usando a injeção JS. Abre a janela do JS que está sendo invocada no C#
+    //método que obtém retorno -> InvokeAsync
+    //método que não obtém retorno -> InvokeVoidAsync
+    private async Task RemoveTarefa(Tarefa tarefa)
     {
-        confirmacao.Exibir();
-        tarefaRemover = tarefa;
+        var resultado = await js.InvokeAsync<bool>("confirm", "Excluir tarefa?");
+
+        if (resultado)
+        {
+            tarefas.Remove(tarefa);
+            //await js.InvokeVoidAsync("alert", "Tarefa excluída com sucesso!");
+
+            //invocando função JS criada em JSFunctions.js
+            await js.InvokeAsync<object>("MostraAlerta", "Ok, tarefa excluída!");
+        }
     }
+
+    //Se for necessário chamar o método de forma síncrona (apenas do lado do cliente)
+    //private void RemoveTarefa(Tarefa tarefa)
+    //{
+    //    var resultado = ((IJSInProcessRuntime)js).Invoke<bool>("confirm", "Excluir tarefa?");
+
+    //    if (resultado)
+    //    {
+    //        tarefas.Remove(tarefa);
+    //    }
+    //}
 
     void RemoverTarefaConfirmacao()
     {
