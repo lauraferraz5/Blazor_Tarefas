@@ -115,8 +115,19 @@
             novaTarefa = "";
             totalTarefas = tarefas.Count();
 
-            await js.InvokeVoidAsync("getTotalTarefas");
+            //chamada do método estático
+            //await js.InvokeVoidAsync("getTotalTarefas");
+
+            //chamada do método de instância.Tem que passar a instância da classe onde está o método que será invocado (se está na mesma classe -> this)
+            await js.InvokeAsync<int>("getTotalTarefasInstancia", DotNetObjectReference.Create(this));
         }
+    }
+
+    //método de instância
+    [JSInvokable]
+    public Task<int> ObterTotalTarefasInstancia()
+    {
+        return Task.FromResult(totalTarefas);
     }
 
     //método C# estático que vai invocar para retornar o total de tarefas
