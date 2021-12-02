@@ -100,7 +100,9 @@
         tarefaRemover = null;
     }
 
-    void AdicionarNovaTarefa()
+    static int totalTarefas = 0;
+
+    async void AdicionarNovaTarefa()
     {
         if (!string.IsNullOrWhiteSpace(novaTarefa))
         {
@@ -111,6 +113,16 @@
                 ID = Guid.NewGuid()
             });
             novaTarefa = "";
+            totalTarefas = tarefas.Count();
+
+            await js.InvokeVoidAsync("getTotalTarefas");
         }
+    }
+
+    //método C# estático que vai invocar para retornar o total de tarefas
+    [JSInvokable]
+    public static Task<int> ObterTotalTarefas()
+    {
+        return Task.FromResult(totalTarefas);
     }
 }
